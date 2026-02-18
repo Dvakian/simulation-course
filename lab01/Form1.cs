@@ -86,13 +86,12 @@ namespace lab1
 
             vx = v0 * cosa; vy = v0 * sina;
 
-            //chart1.Series[0].Points.AddXY(x, y);
             s.Points.AddXY(x, y);
 
             decimal maxY = y;
             while (true)
             {
-               // decimal xPrev = x, yPrev = y;
+                decimal xPrev = x, yPrev = y;
 
                 decimal v = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
 
@@ -102,19 +101,21 @@ namespace lab1
                 x = x + vx * dt;
                 y = y + vy * dt;
 
+                if (y > maxY)
+                    maxY = y;
+
+                if (y < 0 && dt == 1)
+                    MessageBox.Show($"y отрицателен\n" + $"y = {y:F3}\n");
 
                 if (y <= 0)
                 {
-                 //   decimal r = yPrev / (yPrev - y);
-                   // decimal xHit = xPrev + (x - xPrev) * r;
+                    decimal r = yPrev / (yPrev - y);
+                    decimal xHit = xPrev + r * (x - xPrev);
+                    s.Points.AddXY(xHit, 0);
+                    x = xHit;
 
-                    //s.Points.AddXY(xHit, 0);
-                    s.Points.AddXY(x, 0);
                     break;
                 }
-
-                if (y > maxY)
-                    maxY = y;
 
                 s.Points.AddXY(x, y);
             }
