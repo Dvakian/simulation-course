@@ -45,8 +45,9 @@ namespace lab1
 
         private void button2_Click(object sender, EventArgs e)
         {
+            timer1.Stop();
             chart1.Series.Clear();
-
+            
             labelMaxHeight.Text = "Max Height: -";
             labelRange.Text = "Range: -";
             labelFinalSpeed.Text = "Speed: —";
@@ -57,7 +58,45 @@ namespace lab1
         private void inputDT_ValueChanged(object sender, EventArgs e) { }
 
         const decimal g = 9.81M, C = 0.15M, rho = 1.29M;
-        decimal dt, t, x, y, v0, cosa, sina, S, m, k, vx, vy;
+        decimal dt, t, x, y, v0, cosa, sina, S, m, k, vx, vy, maxY;
+        Series s;
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            decimal xPrev = x, yPrev = y;
+
+            decimal v = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
+
+            vx = vx - k * vx * v * dt;
+            vy = vy - (g + k * vy * v) * dt;
+
+            x = x + vx * dt;
+            y = y + vy * dt;
+
+            if (y > maxY) 
+                maxY = y;
+
+            if (y <= 0)
+            {
+                decimal r = (yPrev == y) ? 0 : yPrev / (yPrev - y);
+                decimal xHit = xPrev + r * (x - xPrev);
+
+                s.Points.AddXY(xHit, 0);
+                x = xHit;
+                y = 0;
+
+                timer1.Stop();
+            }
+            else
+                s.Points.AddXY(x, y);
+
+            decimal vFinal = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
+            labelMaxHeight.Text = $"Max Height: {maxY:F3}";
+            labelRange.Text = $"Range: {x:F3}";
+            labelFinalSpeed.Text = $"Speed: {vFinal:F3}";
+
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             dt = inputDT.Value;
@@ -68,13 +107,13 @@ namespace lab1
             if (chart1.Series.IndexOf(name) >= 0)
                 chart1.Series.Remove(chart1.Series[name]);
 
-            Series s = new Series(name);
+            s = new Series(name);
             s.ChartType = SeriesChartType.Line;
             s.BorderWidth = 2;
             s.Legend = "Legend";
             chart1.Series.Add(s);
 
-            x = 0; y = inputHeight.Value; v0 = inputSpeed.Value;
+            t = 0; x = 0; y = inputHeight.Value; v0 = inputSpeed.Value;
 
             double a = (double)inputAngle.Value * Math.PI / 180;
             cosa = (decimal)Math.Cos(a);
@@ -86,10 +125,19 @@ namespace lab1
 
             vx = v0 * cosa; vy = v0 * sina;
 
+            
+            maxY = y;
+
+            s.Points.Clear();
             s.Points.AddXY(x, y);
 
-            decimal maxY = y;
-            while (true)
+            if (dt == 0.0001M)
+                timer1.Interval = 20;
+            else
+                timer1.Interval = (int)(dt*1000);
+           
+            timer1.Start();
+           /* while (true)
             {
                 decimal xPrev = x, yPrev = y;
 
@@ -119,13 +167,13 @@ namespace lab1
 
                 s.Points.AddXY(x, y);
             }
-
-            decimal vFinal = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
+*/
+  /*          decimal vFinal = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
             labelMaxHeight.Text = $"Max Height: {maxY:F3}";
             labelRange.Text = $"Range: {x:F3}";
             labelFinalSpeed.Text = $"Speed: {vFinal:F3}";
+  */      }
 
-        }
         private void button6_Click(object sender, EventArgs e)
         {
             inputDT.Value = 0.001M;

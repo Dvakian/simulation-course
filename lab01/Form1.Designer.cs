@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
@@ -56,6 +57,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.inputHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.inputAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.inputSpeed)).BeginInit();
@@ -207,7 +209,7 @@
             // button3
             // 
             this.button3.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.button3.Location = new System.Drawing.Point(255, 86);
+            this.button3.Location = new System.Drawing.Point(254, 86);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(52, 23);
             this.button3.TabIndex = 18;
@@ -320,6 +322,10 @@
             this.chart1.TabIndex = 25;
             this.chart1.Text = "chart1";
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -329,11 +335,12 @@
             this.ClientSize = new System.Drawing.Size(853, 490);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.label6);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -346,7 +353,6 @@
             this.Controls.Add(this.inputSpeed);
             this.Controls.Add(this.inputAngle);
             this.Controls.Add(this.inputHeight);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.Name = "Form1";
@@ -392,6 +398,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
