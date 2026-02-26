@@ -25,9 +25,9 @@ namespace lab1
             chart1.Parent = pictureBox1;
             chart1.Dock = DockStyle.None;
             chart1.BackColor = Color.FromArgb(100, Color.White);
-            chart1.BringToFront();
+            chart1.BringToFront();
 
-            chart1.ChartAreas[0].BackColor = Color.Transparent;
+            chart1.ChartAreas[0].BackColor = Color.Transparent;
             chart1.ChartAreas[0].BorderColor = Color.Transparent;
 
             inputAngle.Value = 45;
@@ -41,13 +41,13 @@ namespace lab1
             chart1.Legends.Add("Legend");
         }
 
-       
+
 
         private void button2_Click(object sender, EventArgs e)
         {
             timer1.Stop();
             chart1.Series.Clear();
-            
+
             labelMaxHeight.Text = "Max Height: -";
             labelRange.Text = "Range: -";
             labelFinalSpeed.Text = "Speed: —";
@@ -73,7 +73,7 @@ namespace lab1
             x = x + vx * dt;
             y = y + vy * dt;
 
-            if (y > maxY) 
+            if (y > maxY)
                 maxY = y;
 
             if (y <= 0)
@@ -125,7 +125,7 @@ namespace lab1
 
             vx = v0 * cosa; vy = v0 * sina;
 
-            
+
             maxY = y;
 
             s.Points.Clear();
@@ -134,10 +134,10 @@ namespace lab1
             if (dt == 0.0001M)
                 timer1.Interval = 20;
             else
-                timer1.Interval = (int)(dt*1000);
-           
+                timer1.Interval = (int)(dt * 1000);
+
             timer1.Start();
-           /* while (true)
+            while (true)
             {
                 decimal xPrev = x, yPrev = y;
 
@@ -167,12 +167,13 @@ namespace lab1
 
                 s.Points.AddXY(x, y);
             }
-*/
-  /*          decimal vFinal = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
+
+            decimal vFinal = (decimal)Math.Sqrt((double)(vx * vx + vy * vy));
             labelMaxHeight.Text = $"Max Height: {maxY:F3}";
             labelRange.Text = $"Range: {x:F3}";
             labelFinalSpeed.Text = $"Speed: {vFinal:F3}";
-  */      }
+
+        }
 
         private void button6_Click(object sender, EventArgs e)
         {
