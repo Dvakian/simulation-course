@@ -51,6 +51,13 @@ class MagicBalls:
 
         return self.answers[-1]
 
+    def normalize(self):
+        total_sum = sum(self.prob)
+
+        if total_sum > 0:
+            for i in range(len(self.prob)):
+                self.prob[i] = self.prob[i] / total_sum
+
 
 def main():
     p = 0.5
