@@ -1,6 +1,8 @@
 import math
 import random
 
+from scipy.stats import chi2
+
 
 class NormalGenerator:
     def __init__(self, mean, var):
@@ -77,13 +79,14 @@ class NormalCalculate:
 
         return chi
 
-    def check_chi(self, chi):
-        chi_crit = 11.07
+    def check_chi(self, chi, k):
+        df = k - 1
+        chi_crit = chi2.ppf(0.95, df)
 
         if chi > chi_crit:
-            return "Гипотеза отклоняется"
+            return "Гипотеза отклоняется", chi_crit
         else:
-            return "Гипотеза принимается"
+            return "Гипотеза принимается", chi_crit
 
     def relative_error(self, theor, emp):
         if theor == 0:

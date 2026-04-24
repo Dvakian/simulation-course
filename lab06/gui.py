@@ -30,7 +30,7 @@ class Interface:
         frame.pack()
 
         self.entries = []
-        defaults = ["0.264", "0.128", "0.228", "0.207", "0.173"]
+        defaults = ["0.228", "0.1337", "0.25", "0.2", "0.1883"]
 
         for i in range(5):
             e = tk.Entry(frame, width=10)
@@ -152,8 +152,9 @@ class Interface:
         p = res["p_emp"]
 
         ax.bar(x, p, edgecolor="black")
-        ax.set_title("freq.")
         ax.set_xticks(x)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
         for i in range(len(x)):
             ax.text(x[i], p[i] + 0.01, f"{p[i]:.3f}", ha="center")

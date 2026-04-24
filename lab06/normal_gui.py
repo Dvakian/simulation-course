@@ -31,14 +31,14 @@ class NormalInterface:
         input_frame = tk.Frame(main_frame, bg="#9fd3f5", bd=2, relief="solid")
         input_frame.grid(row=0, column=0, padx=20, sticky="n")
 
-        tk.Label(input_frame, text="Mean", bg="#9fd3f5", font=("Arial", 13)).grid(
+        tk.Label(input_frame, text="Среднее", bg="#9fd3f5", font=("Arial", 13)).grid(
             row=0, column=0, padx=15, pady=12
         )
         self.mean_entry = tk.Entry(input_frame, width=10)
         self.mean_entry.grid(row=0, column=1, padx=15, pady=12)
         self.mean_entry.insert(0, "0")
 
-        tk.Label(input_frame, text="Variance", bg="#9fd3f5", font=("Arial", 13)).grid(
+        tk.Label(input_frame, text="Дисперсия", bg="#9fd3f5", font=("Arial", 13)).grid(
             row=1, column=0, padx=15, pady=12
         )
         self.var_entry = tk.Entry(input_frame, width=10)
@@ -46,7 +46,7 @@ class NormalInterface:
         self.var_entry.insert(0, "1")
 
         tk.Label(
-            input_frame, text="Sample size", bg="#9fd3f5", font=("Arial", 13)
+            input_frame, text="Размер выборки", bg="#9fd3f5", font=("Arial", 13)
         ).grid(row=2, column=0, padx=15, pady=12)
         self.n_entry = tk.Entry(input_frame, width=10)
         self.n_entry.grid(row=2, column=1, padx=15, pady=12)
@@ -94,6 +94,10 @@ class NormalInterface:
             var = float(self.var_entry.get())
             N = int(self.n_entry.get())
 
+            if N <= 1:
+                messagebox.showerror("Ошибка.", "Ну такое себе дело")
+                return
+
             if var <= 0:
                 messagebox.showerror("Ошибка", "Дисперсия должна быть больше 0")
                 return
@@ -123,7 +127,7 @@ class NormalInterface:
             probs = calc.theoretical_probs(intervals)
 
             chi = calc.chi_square(counts, probs)
-            chi_result = calc.check_chi(chi)
+            chi_result, chi_crit = calc.check_chi(chi, k)
 
             self.show_result(
                 intervals,
@@ -135,6 +139,7 @@ class NormalInterface:
                 var_error,
                 chi,
                 chi_result,
+                chi_crit,
             )
 
         except ValueError:
@@ -151,6 +156,7 @@ class NormalInterface:
         var_error,
         chi,
         chi_result,
+        chi_crit,
     ):
         for widget in self.chart_frame.winfo_children():
             widget.destroy()
@@ -179,13 +185,13 @@ class NormalInterface:
         canvas.draw()
         canvas.get_tk_widget().pack()
 
-        is_true = chi > 11.07
+        is_true = chi > chi_crit
 
         self.info_label.config(
             text=(
-                f"Average: {emp_mean:.3f} (error = {mean_error:.0%})\n"
-                f"Variance: {emp_var:.3f} (error = {var_error:.0%})\n\n"
-                f"Chi-squared: {chi:.2f} > 11.07 is {str(is_true).lower()}\n"
+                f"Среднее: {emp_mean:.3f} (error = {mean_error:.0%})\n"
+                f"Дисперсия: {emp_var:.3f} (error = {var_error:.0%})\n\n"
+                f"χ²: {chi:.2f} > {chi_crit:.2f} is {str(is_true).lower()}\n"
                 f"{chi_result}"
             )
         )
