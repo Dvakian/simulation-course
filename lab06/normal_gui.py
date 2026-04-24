@@ -6,15 +6,30 @@ from matplotlib.figure import Figure
 
 from normal_core import NormalCalculate, NormalGenerator
 
+# class NormalInterface:
+#     def __init__(self):
+#         self.root = tk.Tk()
+#         self.root.title("Лабораторная 6 — Нормальная СВ")
+#         self.root.geometry("1000x600")
+
 
 class NormalInterface:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Лабораторная 6 — Нормальная СВ")
+    def __init__(self, parent):
+        self.parent = parent
+        self.root = tk.Toplevel(parent)
+
+        self.root.title("Нормальная СВ")
         self.root.geometry("1000x600")
+
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
         self.root.configure(bg="#9fd3f5")
 
         self.create_widgets()
+
+    def on_close(self):
+        self.root.destroy()
+        self.parent.deiconify()
 
     def create_widgets(self):
         title = tk.Label(
@@ -54,7 +69,7 @@ class NormalInterface:
 
         start_btn = tk.Button(
             input_frame,
-            text="Start",
+            text="Поехали",
             command=self.run_experiment,
             width=12,
             font=("Arial", 12),
@@ -82,6 +97,13 @@ class NormalInterface:
                 width=10,
                 command=lambda n=N: self.set_n_and_run(n),
             ).grid(row=0, column=[10, 100, 1000, 10000].index(N), padx=5)
+
+        self.bottom_frame = tk.Frame(self.root, bg="#9fd3f5")
+        self.bottom_frame.pack(fill="both", expand=True)
+
+        tk.Button(self.root, text="Назад", command=self.on_close, width=10).place(
+            relx=0.98, rely=0.98, anchor="se"
+        )
 
     def set_n_and_run(self, N):
         self.n_entry.delete(0, tk.END)

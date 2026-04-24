@@ -8,15 +8,23 @@ from discrete_core import Calculate, DiscreteGenerator
 
 
 class Interface:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Лабораторная 6")
+    def __init__(self, parent):
+        self.parent = parent
+        self.root = tk.Toplevel(parent)
+
+        self.root.title("Лабораторная 6 — Дискретная СВ")
         self.root.geometry("1100x700")
         self.root.configure(bg="#9fd3f5")
 
         self.results = []
 
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
         self.create_widgets()
+
+    def on_close(self):
+        self.root.destroy()
+        self.parent.deiconify()
 
     def create_widgets(self):
         tk.Label(
@@ -63,6 +71,13 @@ class Interface:
             self.root, text="", font=("Arial", 14), justify="left", bg="#9fd3f5"
         )
         self.info_label.pack(pady=10)
+
+        self.bottom_frame = tk.Frame(self.root, bg="#9fd3f5")
+        self.bottom_frame.pack(fill="both", expand=True)
+
+        tk.Button(self.root, text="Назад", command=self.on_close, width=10).place(
+            relx=0.98, rely=0.98, anchor="se"
+        )
 
     def run_experiment(self):
         try:

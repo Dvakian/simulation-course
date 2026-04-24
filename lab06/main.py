@@ -20,27 +20,25 @@ class MainMenu:
 
         tk.Button(
             self.root,
-            text="1. Дискретная случайная величина",
+            text="1. Дискретная СВ",
             width=35,
             command=self.open_discrete,
         ).pack(pady=8)
 
         tk.Button(
             self.root,
-            text="2. Нормальная случайная величина",
+            text="2. Нормальная СВ",
             width=35,
             command=self.open_normal,
         ).pack(pady=8)
 
     def open_discrete(self):
-        self.root.destroy()
-        app = Interface()
-        app.run()
+        self.root.withdraw()  # спрятали меню
+        Interface(self.root)  # передаём ссылку
 
     def open_normal(self):
-        self.root.destroy()
-        app = NormalInterface()
-        app.run()
+        self.root.withdraw()
+        NormalInterface(self.root)
 
     def run(self):
         self.root.mainloop()
