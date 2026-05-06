@@ -125,6 +125,7 @@ class WeatherApp:
 
             self.times, self.states, durations = generator.experiment(T)
             stats, emp, theor = calculator.stats_text(durations)
+            calculator.export_to_excel(durations)
 
             self.text.delete("1.0", tk.END)
             self.text.insert(tk.END, stats)
