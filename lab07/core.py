@@ -2,6 +2,7 @@ import math
 import random
 
 import numpy as np
+from openpyxl import Workbook
 
 
 class MarkovWeatherGenerator:
@@ -11,20 +12,22 @@ class MarkovWeatherGenerator:
         self.states = [1, 2, 3]
 
     def generate_next(self, state):
-        i = state - 1
-        rate = -self.Q[i][i]
+        i = state - 1  # определяем текущее состояние
+        rate = -self.Q[i][i]  # берем интесивность выхода из этого состояния
 
         if rate <= 0:
             return state, float("inf")
 
-        tau = -math.log(random.random()) / rate
+        tau = -math.log(random.random()) / rate  # время пребывания в состоянии
 
         probs = []
         next_states = []
 
         for j in range(3):
             if j != i:
-                probs.append(self.Q[i][j] / rate)
+                probs.append(
+                    self.Q[i][j] / rate
+                )  # вероятность перехода в другое состояние
                 next_states.append(j + 1)
 
         A = random.random()
@@ -43,14 +46,18 @@ class MarkovWeatherGenerator:
         states = [state]
         durations: list[float] = [0, 0, 0]
 
-        while t < T:
-            new_state, tau = self.generate_next(state)
+        while t < T:  # моделирование на промежутке  времени T
+            new_state, tau = self.generate_next(
+                state
+            )  # генерируем новое состояние и время перехода
 
             if t + tau > T:
                 durations[state - 1] += T - t
                 break
 
-            durations[state - 1] += tau
+            durations[state - 1] += (
+                tau  # Если переход выходит за пределы времени моделирования, то добавляется только оставшаяся часть времени
+            )
             t += tau
             state = new_state
 
@@ -104,3 +111,35 @@ class MarkovWeatherCalculate:
             text += f"{names[i]:12s} {durations[i]:8.3f}   {emp[i]:8.4f}   {theor[i]:8.4f}   {err:8.4f}\n"
 
         return text, emp, theor
+
+    def export_to_excel(self, durations, filename="markov_weather_result.xlsx"):
+        emp = self.empirical_distribution(durations)
+        theor = self.stationary_distribution()
+
+        names = ["Ясно", "Облачно", "Пасмурно"]
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Результаты"
+
+        ws.append(
+            [
+                "Состояние",
+                "Время пребывания",
+                "P эмпирическое",
+                "P теоретическое",
+                "Относительная ошибка",
+            ]
+        )
+
+        for i in range(3):
+            err = self.relative_error(theor[i], emp[i])
+            ws.append([names[i], durations[i], emp[i], theor[i], err])
+
+        ws.append([])
+        ws.append(["Матрица интенсивностей Q"])
+
+        for row in self.Q:
+            ws.append(row.tolist())
+
+        wb.save(filename)
