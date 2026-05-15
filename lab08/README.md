@@ -74,7 +74,7 @@ def experiment(self, T, total_time):
 Количество интервалов наблюдения вычисляется как: 
 
 $$ 
-N = \frac{\text{totaltime}}{T} 
+N = \frac{\text{total_time}}{T} 
 $$
 
 ---
